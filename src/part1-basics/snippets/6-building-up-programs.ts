@@ -31,6 +31,7 @@ class MyDate {
   }
 }
 
+// chaining!
 const program2 = () => new MyDate().double().toString().toUpperCase();
 // console.log(program2());
 
@@ -88,7 +89,7 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
     getDate,
     Effect.map((x) => x * 2),
     Effect.map((x) => x.toString()),
-    Effect.map((x) => x.toUpperCase())
+    Effect.map((x) => x.toUpperCase()),
   );
 
   // and then to run it
@@ -114,7 +115,7 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
 
   const program = pipe(
     Effect.succeed([25, 5] as const),
-    Effect.map(([a, b]) => divide(a, b))
+    Effect.map(([a, b]) => divide(a, b)),
   );
 
   // now lets map with a function that returns an effect itself
@@ -123,7 +124,7 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
 
   const program2 = pipe(
     Effect.succeed([25, 5] as const),
-    Effect.flatMap(([a, b]) => divide(a, b))
+    Effect.flatMap(([a, b]) => divide(a, b)),
   );
 
   // much better
@@ -141,7 +142,7 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
     Effect.sync(() => Date.now()),
     Effect.map((x) => x * 2),
     Effect.map((x) => x.toString()),
-    Effect.map((x) => x.toUpperCase())
+    Effect.map((x) => x.toUpperCase()),
   );
 
   // lets take a look at this program again
@@ -155,7 +156,7 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
       return x;
     }),
     Effect.map((x) => x.toString()),
-    Effect.map((x) => x.toUpperCase())
+    Effect.map((x) => x.toUpperCase()),
   );
 
   // we have to return the value, so that it can be passed to the next step
@@ -169,7 +170,7 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
     Effect.tap((x) => console.log(x)),
     // even though ^^ returns void, the value is still passed to the next step
     Effect.map((x) => x.toString()),
-    Effect.map((x) => x.toUpperCase())
+    Effect.map((x) => x.toUpperCase()),
   );
 
   // finally we have `Effect.all`
@@ -180,14 +181,14 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
   const both = Effect.all([getDate, yesterday]);
   const program4 = pipe(
     Effect.all([getDate, yesterday]),
-    Effect.map(([x, y]) => x + y)
+    Effect.map(([x, y]) => x + y),
   );
 
   // something cool about `Effect.all` is that you can also pass an object where the values are effects
   // and it will return an effect of an object of their results
   const program5 = pipe(
     Effect.all({ x: getDate, y: yesterday }),
-    Effect.map(({ x, y }) => x + y)
+    Effect.map(({ x, y }) => x + y),
   );
 }
 
@@ -204,7 +205,7 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
     Effect.sync(() => Date.now()),
     Effect.map((x) => x * 2),
     Effect.flatMap((x) => divide(x, 3)),
-    Effect.map((x) => x.toString())
+    Effect.map((x) => x.toString()),
   );
 
   // does this look familiar?
@@ -214,8 +215,8 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
     .then(
       (x) =>
         new Promise<number>((res, rej) =>
-          x === 0 ? rej("Cannot divide by zero") : res(x / 3)
-        )
+          x === 0 ? rej("Cannot divide by zero") : res(x / 3),
+        ),
     )
     .then((x) => x.toString());
 
@@ -229,7 +230,7 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
     const x = await Promise.resolve(Date.now());
     const y = x * 2;
     const z = await new Promise<number>((res, rej) =>
-      y === 0 ? rej("Cannot divide by zero") : res(y / 3)
+      y === 0 ? rej("Cannot divide by zero") : res(y / 3),
     );
     return z.toString();
   }
@@ -241,7 +242,7 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
     Effect.sync(() => Date.now()),
     Effect.map((x) => x * 2),
     Effect.flatMap((x) => divide(x, 3)),
-    Effect.map((x) => x.toString())
+    Effect.map((x) => x.toString()),
   );
   // after: Effect<string, Error>
   const after = Effect.gen(function* (_) {
@@ -269,7 +270,7 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
     const x = yield* _(
       Effect.succeed(5),
       Effect.map((x) => x * 2),
-      Effect.map((x) => x.toString())
+      Effect.map((x) => x.toString()),
     );
     const y = yield* _(Effect.succeed(10));
     return x + y;
@@ -282,12 +283,12 @@ const program3 = () => pipe(getDate(), double, toString, toUpperCase);
 const before = pipe(
   Effect.succeed(5),
   Effect.map((x) => x * 2),
-  Effect.map((x) => x.toString())
+  Effect.map((x) => x.toString()),
 );
 
 const after = Effect.succeed(5).pipe(
   Effect.map((x) => x * 2),
-  Effect.map((x) => x.toString())
+  Effect.map((x) => x.toString()),
 );
 
 // side note on zipRight vs FlatMap

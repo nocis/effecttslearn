@@ -3,6 +3,7 @@ import { Effect } from "effect";
 // #1. Creating effects from simple values
 {
   // one: Effect<number> (Effect<number, never>, this effect will never fail)
+  // Effect<number,never,never>
   const one = Effect.succeed(1);
 
   // two: Effect<never, string> (Effect<never, string>, this effect will never succeed)
@@ -32,6 +33,8 @@ import { Effect } from "effect";
     throw new Error("will cause a defect");
   });
 
+  // unexpected error!!! cause we want it throw/panic
+
   // sync ASSUMES that the computation will NEVER THROW
   // if it has any chance to, use Effect.try
 
@@ -49,6 +52,7 @@ import { Effect } from "effect";
 }
 
 // #3. Creating effects from asynchronous computations
+// good way to elimiate sync infection
 {
   const wait = (ms: number): Promise<string> =>
     new Promise((resolve) => setTimeout(() => resolve("resolved!"), ms));
@@ -64,7 +68,7 @@ import { Effect } from "effect";
 
   // tryOne: Effect<string, UnknownException>
   const two = Effect.tryPromise(() =>
-    fetch("https://jsonplaceholder.typicode.com/todos/1")
+    fetch("https://jsonplaceholder.typicode.com/todos/1"),
   );
 
   // tryTwo: Effect<Response, Error>
@@ -87,6 +91,6 @@ import { readFile } from "node:fs";
           resume(Effect.succeed(data));
         }
       });
-    }
+    },
   );
 }
